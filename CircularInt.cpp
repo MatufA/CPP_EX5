@@ -7,7 +7,7 @@
             if(i%modulo==cur){
                 return i;
             }
-        }
+        } throw string ("error converting to Circularint");
     }
 
     CircularInt::CircularInt(int start_point,int end_point){
@@ -95,7 +95,7 @@
                 }
             }
 
-        }
+        } throw string("error assingning into CircularInt");
     }
 
      int operator-( int a,CircularInt& c) {
@@ -109,7 +109,7 @@
              if(i%modulo==a){
                  return i;
              }
-         }
+         }throw string("error subtracting  CircularInt");
     }
     int operator+(CircularInt& a,CircularInt& b){
         int temp=a.cur+b.cur;
@@ -127,7 +127,7 @@
             if(i%modulo==a){
                 return i;
             }
-        }
+        }  throw string("error negating  CircularInt");
     }
     CircularInt& CircularInt::operator*=(int a){
         this->cur=gRange(this->start,this->end,a*this->cur);
@@ -148,6 +148,7 @@
     }
     CircularInt&CircularInt::operator--(){
         cur=inRange(--cur);
+	return(*this);
     }
     CircularInt&CircularInt::operator++(){
         cur=inRange(++cur);
