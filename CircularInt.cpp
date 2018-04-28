@@ -1,4 +1,8 @@
 #include "CircularInt.hpp"
+/*
+ * was inspired regarding operators i had missing from @Orel Shalom and @Samuel Bismuth
+ */
+    // helper function
     int  gRange(int start,int end,int cur){
         int modulo=end-start+1;
         cur=cur%modulo;
@@ -7,9 +11,18 @@
             if(i%modulo==cur){
                 return i;
             }
-        } throw string ("error converting to Circularint");
+        }
     }
-
+    int CircularInt::inRange(int result){
+     result=result%modulo;
+     if(result<0)result=result+modulo;
+     for (int i = start; i <=end ; i++) {
+        if(i%modulo==result){
+            return i;
+          }
+     } return result;
+    }
+    // builder
     CircularInt::CircularInt(int start_point,int end_point){
         start=start_point;
         end=end_point;
@@ -17,6 +30,7 @@
         modulo=end-start+1;
 
     };
+    //getters and setters:
     int CircularInt::get_start()const{
         return this->start;
     }
@@ -30,202 +44,392 @@
     void CircularInt::set_cur(int a){
         this->cur=inRange(a);
     }
-    int CircularInt::inRange(int result){
-     result=result%modulo;
-        if(result<0)result=result+modulo;
-     for (int i = start; i <end ; ++i) {
-        if(i%modulo==result){
-            return i;
-        }
-    } return result;
-    }
 
-    int CircularInt::operator++(int) {
-        int temp=cur;
-        if(cur==end) {
-            cur=start;
-        } else {
-            cur++;
-        }
-        return temp;
-    };
 
-    int CircularInt::operator--(int) {
-        int temp=cur;
-        if (cur == start) {
-            cur = end;
-        } else {
-            cur--;
-        }
-        return temp;
+    //some fucking operators
+    void CircularInt::operator= (CircularInt circularInt){
+        this->set_cur(circularInt.get_cur());
     }
-    CircularInt& CircularInt::operator+=(int a){
-        if(a<0)return ((*this)-=-a);
-        int mod=a%(end-start+1);
-        for(int i=0; i<mod; i++){
-            (*this)++;
-        }
+    void CircularInt::operator= (int a){
+        this->set_cur( a );
+
+    }
+    CircularInt CircularInt::operator+ (const CircularInt circularInt){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->set_cur(this->get_cur()+circularInt.get_cur());
+        return *temp;
+
+    }
+    CircularInt CircularInt::operator+ (const int a){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->set_cur(this->get_cur()+a);
+        return *temp;
+
+    }
+    CircularInt CircularInt::operator- (const CircularInt circularInt){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->set_cur(this->get_cur()-circularInt.get_cur());
+        return *temp;
+    }
+    CircularInt CircularInt::operator- (const int a){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->set_cur(this->get_cur()-a);
+        return *temp;
+    }
+    CircularInt CircularInt::operator+ (){
         return *this;
     }
-    CircularInt& CircularInt::operator-=( int a){
-    if(a<0)return ((*this)-=-a);
-    int mod=a%(end-start+1);
-    for(int i=0; i<mod; i++){
-        (*this)--;
+    CircularInt CircularInt::operator- (){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->set_cur(get_end()-get_cur());
+        return *temp;
     }
+    CircularInt CircularInt::operator* (const CircularInt circularInt){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->set_cur(get_cur()*circularInt.get_cur());
+        return *temp;
+    }
+
+    CircularInt CircularInt::operator* (const int a){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->set_cur(get_cur()*a);
+        return *temp;
+    }
+    CircularInt CircularInt::operator/ (const CircularInt circularInt){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        if(this->get_cur()%circularInt.get_cur()!=0||circularInt.get_cur()==0)throw string("division error");
+        temp->set_cur(this->get_cur()/circularInt.get_cur());
+        return *temp;
+    }
+    CircularInt CircularInt::operator/ (const int a){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        if(this->get_cur()%a!=0||a==0)throw string("division error");
+        temp->set_cur(this->get_cur()/a);
+        return *temp;
+    }
+    CircularInt CircularInt::operator% (const CircularInt circularInt){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        if(circularInt.get_cur()==0)throw string("division error");
+        temp->set_cur(this->get_cur()%circularInt.get_cur());
+        return *temp;
+    }
+    CircularInt CircularInt::operator% (const int a){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        if(a==0)throw string("division error");
+        temp->set_cur(this->get_cur()%a);
+        return *temp;
+    }
+    CircularInt& CircularInt::operator++ () {
+    cur++;
+    set_cur(cur);
     return *this;
     }
-    int  CircularInt::operator-() {
-        int loop=cur%(end-start+1);
-        return end-loop;
-
-
+    CircularInt CircularInt::operator++ ( int a){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        int temps=get_cur();
+        temp->set_cur(++temps);
+        set_cur(temps++);
+        return *temp;
     }
-    CircularInt& CircularInt::operator=(int a){
-        if(a>=start&&a<=end){
-            this->cur=a;
-            return *this;
-        }else{
-            int modulo=(end-start+1);
-            a=a%modulo;
-            for(int i=start;i<=end;i++){
-                if(i%modulo==a){
-                    this->cur=i;
-                    return *this;
-                }
-            }
-
-        } throw string("error assingning into CircularInt");
+    CircularInt& CircularInt::operator-- (){
+        set_cur((get_cur()-1));
+        return *this;
+    }
+    CircularInt CircularInt::operator-- (const int a){
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->set_cur(get_cur()-1);
+        return *temp;
     }
 
-     int operator-( int a,CircularInt& c) {
-        int modulo=(c.end-c.start+1);
-         a=a-c.cur;
+
+
+    bool CircularInt::operator== (const CircularInt& circularInt){
+        if(this->get_cur()==circularInt.get_cur()&&
+                this->get_start()==circularInt.get_start()&&
+                this->get_end()==circularInt.get_end())return true;
+        return false;
+    }
+    bool CircularInt::operator== (const int& a){
+        if (this->get_cur()==a)return true;
+        return false;
+    }
+    bool CircularInt::operator!= (const CircularInt& circularInt){
+        if(this->get_cur()==circularInt.get_cur()&&
+           this->get_start()==circularInt.get_start()&&
+           this->get_end()==circularInt.get_end())return false;
+        return true;
+    }
+    bool CircularInt::operator!= (const int& a){
+        if (this->get_cur()==a)return false;
+        return true;
+    }
+    bool CircularInt::operator> (const CircularInt& circularInt) const{
+        if(this->get_cur()>circularInt.get_cur())return true;
+        return false;
+    }
+    bool CircularInt::operator> (const int& a) const{
+        if (this->get_cur()>a)return true;
+        return false;
+    }
+
+    bool CircularInt::operator< (const CircularInt& circularInt) const{
+        if (this->get_cur()<circularInt.get_cur())return true;
+        return false;
+    }
+    bool CircularInt::operator< (const int& a) const{
+        if (this->get_cur()<a)return true;
+        return false;
+    }
+    bool CircularInt::operator>= (const CircularInt& circularInt) const{
+        if(get_cur()>=circularInt.get_cur())return true;
+        return false;
+    }
+    bool CircularInt::operator>= (const int& a) const{
+        if(get_cur()>=a)return true;
+        return false;
+    }
+    bool CircularInt:: operator<= (const CircularInt& circularInt) const{
+        if(get_cur()<=circularInt.get_cur())return true;
+        return false;
+    }
+    bool CircularInt::operator<= (const int& a) const{
+        if(get_cur()<=a)return true;
+        return false;
+    }
+
+
+
+
+     int operator-( int a,CircularInt& c)  {
+        int modulo=(c.get_end()-c.get_start()+1);
+         a=a-c.get_cur();
          while(a<0){
              a=a+modulo;
          }
          a=a%modulo;
-         for(int i=c.start;i<=c.end;i++){
+         for(int i=c.get_start();i<=c.get_end();i++){
              if(i%modulo==a){
                  return i;
              }
-         }throw string("error subtracting  CircularInt");
+         }
     }
-    int operator+(CircularInt& a,CircularInt& b){
-        int temp=a.cur+b.cur;
-            return gRange(a.start,a.end,temp);
+
+
+
+    bool CircularInt::operator! () const{
+        return !(this->get_cur());
+    }
+    bool CircularInt::operator&& (const CircularInt circularInt){
+        return (this->get_cur()&&circularInt.get_cur());
+    }
+    bool CircularInt::operator&& (const int a){
+        return (this->get_cur()&&a);
+    }
+    bool CircularInt::operator|| (const CircularInt circularInt){
+        return (this->get_cur()||circularInt.get_cur());
+    }
+
+    bool CircularInt::operator|| (const int a){
+        return (this->get_cur()||a);
 
     }
-    int operator-(CircularInt& c,int a){
-        int modulo=(c.get_end()-c.get_start()+1);
-        a=a-c.cur;
-        while(a<0){
-            a=a+modulo;
-        }
-        a=a%modulo;
-        for(int i=c.get_start();i<=c.get_end();i++){
-            if(i%modulo==a){
-                return i;
-            }
-        }  throw string("error negating  CircularInt");
+
+
+    CircularInt CircularInt::operator~ (){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur(~get_cur());
+        return *temp;
     }
-    CircularInt& CircularInt::operator*=(int a){
-        this->cur=gRange(this->start,this->end,a*this->cur);
+    CircularInt CircularInt::operator& (const CircularInt circularInt){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())&(circularInt.get_cur()));
+        return *temp;
+    }
+    CircularInt CircularInt::operator& (const int a){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())&(a));
+        return *temp;
+    }
+    CircularInt CircularInt::operator| (const CircularInt circularInt){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())|(circularInt.get_cur()));
+        return *temp;
+    }
+    CircularInt CircularInt::operator| (const int a){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())|(a));
+        return *temp;
+    }
+
+    CircularInt CircularInt::operator^ (const CircularInt circularInt){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())^(circularInt.get_cur()));
+        return *temp;
+    }
+    CircularInt CircularInt::operator^ (const int a){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())^(a));
+        return *temp;
+    }
+    CircularInt CircularInt::operator<< (const CircularInt circularInt){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())<<(circularInt.get_cur()));
+        return *temp;
+    }
+    CircularInt CircularInt::operator<< (const int a){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())<<(a));
+        return *temp;
+    }
+    CircularInt CircularInt::operator>> (const CircularInt circularInt){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())>>(circularInt.get_cur()));
+        return *temp;
+    }
+    CircularInt CircularInt::operator>> (const int a){
+        CircularInt *temp=new CircularInt (get_start(),get_end());
+        temp->set_cur((get_cur())>>(a));
+        return *temp;
+    }
+
+
+
+
+    CircularInt& CircularInt::operator+= (const CircularInt circularInt){
+        this->set_cur(get_cur()+circularInt.get_cur());
         return *this;
     }
-      ostream& operator<<(ostream& output,const CircularInt& x){
+    CircularInt& CircularInt::operator+= (const int a){
+        this->set_cur(get_cur()+a);
+        return *this;
+    }
+    CircularInt& CircularInt::operator-= (const CircularInt circularInt){
+        this->set_cur(get_cur()-circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator-= (const int a){
+        this->set_cur(get_cur()-a);
+        return *this;
+    }
+    CircularInt& CircularInt::operator*= (const CircularInt circularInt){
+        this->set_cur(get_cur()*circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator*= (const int a){
+        this->set_cur(get_cur()*a);
+        return *this;
+    }
+    CircularInt& CircularInt::operator/= (const CircularInt circularInt){
+        if(circularInt.get_cur()==0||get_cur()%circularInt.get_cur()!=0)throw string("division error");
+        this->set_cur(get_cur()/circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator/= (const int a){
+        if(a==0||get_cur()%a!=0)throw string("division error");
+        this->set_cur(get_cur()/a);
+        return *this;
+    }
+    CircularInt& CircularInt::operator%= (const CircularInt circularInt){
+        if(circularInt.get_cur()==0)throw string("division error");
+        this->set_cur(get_cur()%circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator%= (const int a){
+        if(a==0)throw string("division error");
+        this->set_cur(get_cur()%a);
+        return *this;
+    }
+    CircularInt& CircularInt::operator&= (const CircularInt circularInt){
+        set_cur(get_cur()&circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator&= (const int a){
+        set_cur(get_cur()&a);
+        return *this;
+    }
+    CircularInt& CircularInt::operator|= (const CircularInt circularInt){
+        set_cur(get_cur()|circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator|= (const int a){
+        set_cur(get_cur()|a);
+        return *this;
+    }
+
+    CircularInt& CircularInt::operator^= (const CircularInt circularInt){
+        set_cur(get_cur()^circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator^= (const int a){
+        set_cur(get_cur()^a);
+        return *this;
+    }
+    CircularInt& CircularInt::operator<<= (const CircularInt circularInt){
+        set_cur(get_cur()<<circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator<<= (const int a){
+        set_cur(get_cur()<<a);
+        return *this;
+    }
+    CircularInt& CircularInt::operator>>= (const CircularInt circularInt){
+        set_cur(get_cur()>>circularInt.get_cur());
+        return *this;
+    }
+    CircularInt& CircularInt::operator>>= (const int a){
+        set_cur(get_cur()>>a);
+        return *this;
+    }
+
+
+     CircularInt operator+ (const int a, const CircularInt& circularInt){
+         CircularInt *temp=new CircularInt (circularInt.get_start(),circularInt.get_end());
+         temp->set_cur(circularInt.get_cur()+a);
+         return *temp;
+     }
+     CircularInt operator- (const int a, const CircularInt& circularInt){
+         CircularInt *temp=new CircularInt (circularInt.get_start(),circularInt.get_end());
+         temp->set_cur(a-circularInt.get_cur());
+         return *temp;
+     }
+     CircularInt operator/ (const int a, const CircularInt& circularInt){
+         CircularInt *temp=new CircularInt (circularInt.get_start(),circularInt.get_end());
+         if(circularInt.get_cur()==0||a%circularInt.get_cur()!=0)throw string("division error");
+         temp->set_cur(a/circularInt.get_cur());
+         return *temp;
+     }
+     bool operator== (const int& a, const CircularInt& circularInt){
+         if(a==circularInt.get_cur())return true;
+         return false;
+     }
+
+     bool operator!= (const int& a, const CircularInt& circularInt){
+         if(a!=circularInt.get_cur())return true;
+         return false;
+     }
+
+     bool operator> (const int& a, const CircularInt& circularInt){
+         if(a>circularInt.get_cur())return true;
+         return false;
+     }
+     bool operator< (const int& a, const CircularInt& circularInt){
+         if(a<circularInt.get_cur())return true;
+         return false;
+     }
+     bool operator>= (const int& a, const CircularInt& circularInt){
+         if(a>=circularInt.get_cur())return true;
+         return false;
+     }
+     bool operator<= (const int& a, const CircularInt& circularInt){
+         if(a<=circularInt.get_cur())return true;
+         return false;
+     }
+
+     istream& operator>> (istream& is, CircularInt& circularInt);
+
+    ostream& operator<<(ostream& output,const CircularInt& x){
     output<<x.cur;
         return  output;
-    }
-    int CircularInt::operator+(int a){
-        return inRange(cur+a);
-    }
-    int CircularInt::operator-(int a){
-        return inRange(cur-a);
-    }
-    int CircularInt::operator*(int a){
-        return inRange(a*cur);
-    }
-    CircularInt&CircularInt::operator--(){
-        cur=inRange(--cur);
-	return(*this);
-    }
-    CircularInt&CircularInt::operator++(){
-        cur=inRange(++cur);
-        return *this;
-    }
-    CircularInt&CircularInt::operator%= (const int divisor){
-        cur=inRange(cur%divisor);
-        return *this;
-    }
-    bool CircularInt::operator ==(CircularInt const& circularInt){
-        if(cur==circularInt.get_cur())return true;
-        return false;
-    }
-    bool CircularInt::operator !=(CircularInt const& circularInt){
-        if(cur==circularInt.get_cur())return false;
-        return true;
-    }
-    bool CircularInt::operator> (CircularInt const& circularInt) const{
-        if(cur>circularInt.get_cur())return true;
-        return false;
-    }
-    bool CircularInt::operator< (CircularInt const& circularInt) const{
-        if(cur<circularInt.get_cur())return true;
-        return false;
-    }
-    bool CircularInt::operator<= (CircularInt const& circularInt) const{
-        if(cur<=circularInt.get_cur())return true;
-        return false;
-    }
-
-    bool CircularInt::operator>= (CircularInt const& circularInt) const{
-        if(cur>=circularInt.get_cur())return true;
-        return false;
-    }
-    void CircularInt::operator=(CircularInt const& circularInt){
-        this->set_cur(gRange(this->get_start(),this->get_end(),circularInt.get_cur()));
-    }
-    /*this is uselesss*/
-    int  CircularInt::operator+() {
-        return this->cur;
-    }
-    /*Perhaps we can consider start as zero in our system*/
-    bool CircularInt::operator!()const{
-        if(cur==start)return true;
-        else return false;
-    }
-    bool CircularInt::operator||(const CircularInt& c){
-        return (!!*this)||(!!c);
-
-    }
-    bool CircularInt::operator&&( const CircularInt& c){
-        return (!!*this)&&(!!c);
-    }
-    int operator/(CircularInt& c,int a){
-
-        for(int i=c.start;i<c.end;i++){
-           if((a*i)%c.modulo==c.cur)return i;
-          }
-        throw string("There is no number x in {" + to_string(c.start)+ "," + to_string(c.end)+ "} such that  x*"+to_string(a)+"=" + to_string(c.cur));
-    };
-    int CircularInt::operator~(){
-        return inRange(~cur);
-    }
-    int CircularInt::operator&(int a){
-        return inRange(cur&a);
-    }
-    int CircularInt::operator|(int a){
-        return inRange(cur|a);
-    }
-    int CircularInt::operator^(int a){
-        return inRange(cur^a);
-    }
-    int CircularInt::operator<<(int a){
-        return inRange(cur<<a);
-    }
-    int CircularInt::operator>>(int a){
-        return inRange(cur>>a);
     }
 
 
