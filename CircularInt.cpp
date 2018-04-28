@@ -56,13 +56,13 @@
     }
     CircularInt CircularInt::operator+ (const CircularInt circularInt){
         CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
-        temp->set_cur(this->get_cur()+circularInt.get_cur());
+        temp->set_cur(get_cur()+circularInt.get_cur());
         return *temp;
 
     }
     CircularInt CircularInt::operator+ (const int a){
         CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
-        temp->set_cur(this->get_cur()+a);
+        temp->set_cur(get_cur()+a);
         return *temp;
 
     }
@@ -77,7 +77,9 @@
         return *temp;
     }
     CircularInt CircularInt::operator+ (){
-        return *this;
+        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        temp->cur=get_cur();
+        return *temp;
     }
     CircularInt CircularInt::operator- (){
         CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
@@ -442,5 +444,4 @@
 
 // Created by ehud on 15/04/18.
 //
-
 
