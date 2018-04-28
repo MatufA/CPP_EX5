@@ -87,13 +87,13 @@
         return *temp;
     }
     CircularInt CircularInt::operator* (const CircularInt circularInt){
-        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        CircularInt *temp= new CircularInt(get_start(),get_end());
         temp->set_cur(get_cur()*circularInt.get_cur());
         return *temp;
     }
 
     CircularInt CircularInt::operator* (const int a){
-        CircularInt *temp= new CircularInt(this->get_start(),this->get_end());
+        CircularInt *temp= new CircularInt(get_start(),get_end());
         temp->set_cur(get_cur()*a);
         return *temp;
     }
@@ -314,11 +314,13 @@
         return *this;
     }
     CircularInt& CircularInt::operator*= (const CircularInt circularInt){
-        this->set_cur(get_cur()*circularInt.get_cur());
+        int temp=get_cur()*circularInt.get_cur();
+        set_cur(temp);
         return *this;
     }
     CircularInt& CircularInt::operator*= (const int a){
-        this->set_cur(get_cur()*a);
+        int temp=get_cur()*a;
+        set_cur(temp);
         return *this;
     }
     CircularInt& CircularInt::operator/= (const CircularInt circularInt){
