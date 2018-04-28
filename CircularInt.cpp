@@ -425,7 +425,11 @@
          return false;
      }
 
-     istream& operator>> (istream& is, CircularInt& circularInt);
+     istream& operator>> (istream& is, CircularInt& circularInt){
+         int x;
+         is>> x;
+         circularInt.set_cur(x);
+     }
 
     ostream& operator<<(ostream& output,const CircularInt& x){
     output<<x.cur;
@@ -438,4 +442,5 @@
 
 // Created by ehud on 15/04/18.
 //
+
 
