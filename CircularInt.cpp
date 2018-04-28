@@ -12,6 +12,7 @@
                 return i;
             }
         }
+        throw string("error ranging");
     }
     int CircularInt::inRange(int result){
      result=result%modulo;
@@ -20,7 +21,8 @@
         if(i%modulo==result){
             return i;
           }
-     } return result;
+     }   throw string("error ranging");
+
     }
     // builder
     CircularInt::CircularInt(int start_point,int end_point){
@@ -213,7 +215,7 @@
              if(i%modulo==a){
                  return i;
              }
-         }
+         }throw string("error negating");
     }
 
 
@@ -429,10 +431,11 @@
          return false;
      }
 
-     istream& operator>> (istream& is, CircularInt& circularInt){
+      istream& operator>> (istream& is, CircularInt& circularInt){
          int x;
          is>> x;
          circularInt.set_cur(x);
+          return is;
      }
 
     ostream& operator<<(ostream& output,const CircularInt& x){
